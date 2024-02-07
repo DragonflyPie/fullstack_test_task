@@ -1,19 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-interface Product {
+export interface Product {
   id: number
   shopify_id: string
   description: string
   image_url: string
   created_at: string
-}
-
-interface ProductsApiResponse {
-  statusCode: number
-  httpStatus: string
-  message: string
-  data: Product[]
-  timeStamp: string
 }
 
 // Define a service using a base URL and expected endpoints
@@ -26,7 +18,7 @@ export const productsApi = createApi({
     // Supply generics for the return type (in this case `QuotesApiResponse`)
     // and the expected query argument. If there is no argument, use `void`
     // for the argument type instead.
-    getProducts: build.query<ProductsApiResponse, void>({
+    getProducts: build.query<Product[], void>({
       query: () => "products",
       // `providesTags` determines which 'tag' is attached to the
       // cached data returned by the query.

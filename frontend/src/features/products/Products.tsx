@@ -1,3 +1,4 @@
+import ProductListing from "./Product"
 import { useGetProductsQuery } from "./productsAPI"
 
 export const Products = () => {
@@ -5,33 +6,33 @@ export const Products = () => {
 
   if (isError) {
     return (
-      <div>
-        <h1>Something went wrong</h1>
+      <div className="min-h-dvh flex justify-center items-center">
+        <p>Something went wrong</p>
       </div>
     )
   }
 
   if (isLoading) {
     return (
-      <div>
-        <h1>Loading...</h1>
+      <div className="min-h-dvh flex justify-center items-center">
+        <p>Loading...</p>
       </div>
     )
   }
 
-  if (isSuccess) {
+  if (!data || !data.length) {
     return (
-      <div>
-        {data.data.map(product => (
-          <div className="">
-            <div key={product.shopify_id} className="">
-              {product.shopify_id}
-            </div>
-          </div>
-        ))}
+      <div className="min-h-dvh flex justify-center items-center">
+        <p>No products were found</p>
       </div>
     )
   }
 
-  return null
+  return (
+    <div className="grid  xl:grid-cols-3 grid-cols-1 gap-4">
+      {data.map(product => (
+        <ProductListing key={product.shopify_id} {...product} />
+      ))}
+    </div>
+  )
 }
