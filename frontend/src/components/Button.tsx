@@ -1,6 +1,6 @@
 interface ButtonProps {
-  value: string
-  handleClick: () => void
+  value: string;
+  handleClick: () => void;
 }
 const Button = ({ value, handleClick }: ButtonProps) => {
   return (
@@ -10,7 +10,7 @@ const Button = ({ value, handleClick }: ButtonProps) => {
     >
       {value}
     </button>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

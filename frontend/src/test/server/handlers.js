@@ -1,7 +1,7 @@
-import { http } from "msw"
+import { http, HttpResponse } from "msw";
 
 const handlers = [
-  http.get("https://pokeapi.co/api/v2/pokemon/bulbasaur", (req, res, ctx) => {
+  http.get(`${import.meta.env.VITE_BASE_URL}/products`, () => {
     const mockApiResponse = [
       {
         id: 2,
@@ -10,10 +10,16 @@ const handlers = [
         image_url:
           "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Wikiwiki2008.JPG/220px-Wikiwiki2008.JPG",
       },
-    ]
+    ];
 
-    return res(ctx.json(mockApiResponse))
+    return HttpResponse.json(mockApiResponse);
   }),
-]
+];
 
-export { handlers }
+const errorHandlers = [
+  http.get(`${import.meta.env.VITE_BASE_URL}/products`, () => {
+    return HttpResponse.error();
+  }),
+];
+
+export { handlers, errorHandlers };

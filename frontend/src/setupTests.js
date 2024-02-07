@@ -1,16 +1,16 @@
-import "@testing-library/jest-dom"
+import "@testing-library/jest-dom";
 
-import { server } from "./test/server"
+import { server } from "./test/server";
 
 // @ts-ignore
-globalThis.fetch = fetch
+globalThis.fetch = fetch;
 // @ts-ignore
-globalThis.Headers = Headers
+globalThis.Headers = Headers;
 // @ts-ignore
-globalThis.Request = Request
+globalThis.Request = Request;
 // @ts-ignore
-globalThis.Response = Response
+globalThis.Response = Response;
 
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }))
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());

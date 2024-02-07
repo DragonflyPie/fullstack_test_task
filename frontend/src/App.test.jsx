@@ -1,34 +1,39 @@
-import { http } from "msw"
-import { screen } from "@testing-library/react"
-
-import App from "./App"
-import { server } from "./test/server"
-import { renderWithProviders } from "./test/test-utils"
+import { screen } from "@testing-library/react";
+import App from "./App";
+import { renderWithProviders } from "./test/test-utils";
+import { server } from "./test/server";
+import { errorHandlers } from "./test/server/handlers";
+import { HttpResponse, http } from "msw";
 
 describe("App", () => {
-  // it("handles good response", async () => {
-  //   renderWithProviders(<App />)
+  it("Handles successfull response", async () => {
+    renderWithProviders(<App />);
 
-  //   screen.getByText("Loading...")
+    screen.getByText("Loading...");
 
-  //   await screen.findByText("Test")
-  // })
+    await screen.findByText("Test");
+  });
 
-  it("handles error response", async () => {
-    // force msw to return error response
+  it("Handles server error", async () => {
+    server.use(...errorHandlers);
+    renderWithProviders(<App />);
+
+    screen.getByText("Loading...");
+
+    await screen.findByText("Something went wrong");
+  });
+
+  it("Handles empty data", async () => {
     server.use(
-      http.get(
-        "https://pokeapi.co/api/v2/pokemon/bulbasaur",
-        (req, res, ctx) => {
-          return res(ctx.status(500))
-        },
-      ),
-    )
+      http.get(`${import.meta.env.VITE_BASE_URL}/products`, () => {
+        console.log(123);
+        return HttpResponse.json([]);
+      }),
+    );
+    renderWithProviders(<App />);
 
-    renderWithProviders(<App />)
+    screen.getByText("Loading...");
 
-    screen.getByText("Loading...")
-
-    await screen.findByText("Oh no, there was an error")
-  })
-})
+    await screen.findByText("No products were found");
+  });
+});

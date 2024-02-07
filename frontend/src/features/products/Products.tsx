@@ -1,15 +1,15 @@
-import SingleProduct from "./SingleProduct"
-import { useGetProductsQuery } from "./productsAPI"
+import SingleProduct from "./SingleProduct";
+import { useGetProductsQuery } from "./productsAPI";
 
 export const Products = () => {
-  const { data, isError, isLoading, isSuccess } = useGetProductsQuery()
+  const { data, isError, isLoading } = useGetProductsQuery();
 
   if (isError) {
     return (
       <div className="min-h-dvh flex justify-center items-center">
         <p>Something went wrong</p>
       </div>
-    )
+    );
   }
 
   if (isLoading) {
@@ -17,7 +17,7 @@ export const Products = () => {
       <div className="min-h-dvh flex justify-center items-center">
         <p>Loading...</p>
       </div>
-    )
+    );
   }
 
   if (!data || !data.length) {
@@ -25,7 +25,7 @@ export const Products = () => {
       <div className="min-h-dvh flex justify-center items-center">
         <p>No products were found</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -34,5 +34,5 @@ export const Products = () => {
         <SingleProduct key={product.shopify_id} {...product} />
       ))}
     </div>
-  )
-}
+  );
+};
