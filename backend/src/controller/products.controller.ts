@@ -1,20 +1,11 @@
 import { Response, Request } from "express";
-import { Product } from "../interface/product";
-import { connection } from "../config/mysql.config";
-import { QUERY } from "../query/products.query";
-import { Code, Status } from "../enum/httpStatus.enum";
-import { HttpResponse } from "../domain/response";
-import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
-
-type ResultSet = [
-  RowDataPacket[] | RowDataPacket[][] | ResultSetHeader,
-  FieldPacket[]
-];
+import { getDbProducts } from "../services/products/productService";
+import { Code } from "../enum/httpStatus.enum";
 
 export const getProducts = async (
   req: Request,
   res: Response
-): Promise<Response<HttpResponse>> => {
+): Promise<Response> => {
   console.info(
     `[${new Date().toLocaleString()}] Incoming ${req.method} ${
       req.originalUrl
@@ -22,55 +13,14 @@ export const getProducts = async (
   );
 
   try {
-    const pool = await connection();
-    const result: ResultSet = await pool.query(QUERY.SELECT_PRODUCTS);
-    return res
-      .status(Code.OK)
-      .send(
-        new HttpResponse(Code.OK, Status.OK, "Products retrieved", result[0])
-      );
+    const dbProducts = await getDbProducts();
+    return res.send(dbProducts);
   } catch (err: unknown) {
     console.log(err);
 
     return res
       .status(Code.INTERNAL_SERVER_ERROR)
-      .send(
-        new HttpResponse(
-          Code.INTERNAL_SERVER_ERROR,
-          Status.INTERNAL_SERVER_ERROR,
-          "Error happened"
-        )
-      );
-  }
-};
-
-export const createProducts = async (products: Product[]): Promise<void> => {
-  const pool = await connection();
-  try {
-    for (const product of products) {
-      console.info(
-        `[${new Date().toLocaleString()}] Trying to insert product ${
-          product.shopify_id
-        }`
-      );
-      const result: ResultSet = await pool.query(
-        QUERY.CREATE_PRODUCT,
-        Object.values(product)
-      );
-
-      let createdProduct = {
-        id: (result[0] as ResultSetHeader).insertId,
-        product,
-      };
-
-      console.info(
-        `Success. Product created. ID: ${createdProduct.product.shopify_id}`
-      );
-    }
-  } catch (err: unknown) {
-    console.log(err);
-  } finally {
-    pool.end();
+      .send("Error fetching products");
   }
 };
 

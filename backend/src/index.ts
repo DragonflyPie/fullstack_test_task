@@ -1,9 +1,11 @@
 import { App } from "./app";
 
-const init = (): void => {
+const init = async (): Promise<void> => {
   const app = new App();
-  app.initializeData();
+  await app.initializeData();
   app.listen();
 };
 
-init();
+init().then(() => {
+  console.info("Server started");
+});

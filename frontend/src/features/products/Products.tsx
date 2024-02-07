@@ -1,4 +1,4 @@
-import ProductListing from "./Product"
+import SingleProduct from "./SingleProduct"
 import { useGetProductsQuery } from "./productsAPI"
 
 export const Products = () => {
@@ -31,7 +31,7 @@ export const Products = () => {
   return (
     <div className="grid  xl:grid-cols-3 grid-cols-1 gap-4">
       {data.map(product => (
-        <ProductListing key={product.shopify_id} {...product} />
+        <SingleProduct key={product.shopify_id} {...product} />
       ))}
     </div>
   )

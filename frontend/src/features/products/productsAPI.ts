@@ -10,7 +10,7 @@ export interface Product {
 
 // Define a service using a base URL and expected endpoints
 export const productsApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: "http://100.127.154.2:5000" }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BASE_URL }),
   reducerPath: "productsApi",
   // Tag types are used for caching and invalidation.
   tagTypes: ["Products"],

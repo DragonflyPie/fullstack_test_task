@@ -1,11 +1,10 @@
 import cors from "cors";
-import express, { Application, Response, Request } from "express";
+import express, { Application, Response } from "express";
 import ip from "ip";
-import { Code, Status } from "./enum/httpStatus.enum";
-import { HttpResponse } from "./domain/response";
+import { Code } from "./enum/httpStatus.enum";
 import productsRoutes from "./routes/products.routes";
-import { fetchProducts } from "./graphql/fetchShopify";
-import { createProducts } from "./controller/products.controller";
+import { fetchProducts } from "./services/shopify/shopifyService";
+import { createDbProducts } from "./services/products/productService";
 
 export class App {
   private readonly app: Application;
@@ -25,7 +24,7 @@ export class App {
     if (!products) {
       throw Error("No products fetched");
     }
-    await createProducts(products);
+    await createDbProducts(products);
   }
 
   listen(): void {
@@ -36,20 +35,10 @@ export class App {
   private routes() {
     this.app.use("/products", productsRoutes);
     this.app.get("/", (_, res: Response) =>
-      res
-        .status(Code.OK)
-        .send(new HttpResponse(Code.OK, Status.OK, "Server is up"))
+      res.status(Code.OK).send("Server is up")
     );
     this.app.all("*", (_, res: Response) =>
-      res
-        .status(Code.NOT_FOUND)
-        .send(
-          new HttpResponse(
-            Code.NOT_FOUND,
-            Status.NOT_FOUND,
-            this.ROUTE_NOT_FOUND
-          )
-        )
+      res.status(Code.NOT_FOUND).send("Route not found")
     );
   }
 

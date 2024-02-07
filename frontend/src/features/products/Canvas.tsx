@@ -1,11 +1,10 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 interface CanvasProps {
   url: string
-  height: number
-  width: number
+  size: number
 }
 
-const Canvas = ({ url, height, width }: CanvasProps) => {
+const Canvas = ({ url, size }: CanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -17,16 +16,23 @@ const Canvas = ({ url, height, width }: CanvasProps) => {
       const ctx = canvasRef.current.getContext("2d")
       if (!ctx) return
 
-      const widthRatio = width / image.width
-      const heightRatio = height / image.height
+      const widthRatio = size / image.width
+      const heightRatio = size / image.height
       const ratio = Math.min(widthRatio, heightRatio)
-      const yShift = (height - image.height * ratio) / 2
+      const yShift = (size - image.height * ratio) / 2
+      const xShift = (size - image.width * ratio) / 2
 
-      ctx.drawImage(image, 0, yShift, image.width * ratio, image.height * ratio)
+      ctx.drawImage(
+        image,
+        xShift,
+        yShift,
+        image.width * ratio,
+        image.height * ratio,
+      )
     }
-  }, [canvasRef, url, width, height])
+  }, [canvasRef, url, size, size])
 
-  return <canvas ref={canvasRef} width={width} height={height} className="" />
+  return <canvas ref={canvasRef} width={size} height={size} className="" />
 }
 
 export default Canvas
