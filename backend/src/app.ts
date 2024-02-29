@@ -1,10 +1,10 @@
 import cors from "cors";
 import express, { Application, Response } from "express";
 import ip from "ip";
-import { Code } from "./enum/httpStatus.enum";
-import productsRoutes from "./routes/products.routes";
+import { Code } from "./enum/httpStatus";
+import productsRoutes from "./routes/productRoutes";
 import { fetchProducts } from "./services/shopify/shopifyService";
-import { createDbProducts } from "./services/products/productService";
+import { createDbProducts } from "./services/products/productsService";
 
 export class App {
   private readonly app: Application;

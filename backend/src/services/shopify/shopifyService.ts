@@ -1,7 +1,6 @@
 import { GraphQLClient } from "graphql-request";
-import { query } from "./shopify.query";
+import { query } from "./shopifyQuery";
 import { ShopifyResponse } from "../../interface/shopify";
-import { cleanHtml } from "./shopify.sanitize";
 
 const endpoint = `https://cpb-new-developer.myshopify.com/admin/api/2024-01/graphql.json`;
 
@@ -22,12 +21,10 @@ export const fetchProducts = async () => {
       const {
         node: {
           id: shopify_id,
-          descriptionHtml,
+          descriptionHtml: description,
           featuredImage: { url: image_url },
         },
       } = product;
-
-      const description = cleanHtml(descriptionHtml);
 
       return { shopify_id, description, image_url };
     });

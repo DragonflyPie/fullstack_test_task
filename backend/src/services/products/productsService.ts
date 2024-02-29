@@ -1,17 +1,11 @@
-import { FieldPacket, ResultSetHeader, RowDataPacket } from "mysql2";
-import { connection } from "../../config/mysql.config";
-import { Product } from "../../interface/product";
-import { QUERY } from "./products.query";
-
-type ResultSet = [
-  RowDataPacket[] | RowDataPacket[][] | ResultSetHeader,
-  FieldPacket[]
-];
+import { ResultSetHeader } from "mysql2";
+import { connection } from "../../config/mysqlConfig";
+import { DbProduct, Product } from "../../interface/product";
+import { QUERY } from "./productsQuery";
 
 export const getDbProducts = async () => {
   const pool = await connection();
-
-  const result: ResultSet = await pool.query(QUERY.SELECT_PRODUCTS);
+  const result = await pool.query<DbProduct[]>(QUERY.SELECT_PRODUCTS);
   const products = result[0];
   return products;
 };
@@ -25,7 +19,7 @@ export const createDbProducts = async (products: Product[]): Promise<void> => {
           product.shopify_id
         }`
       );
-      const result: ResultSet = await pool.query(
+      const result = await pool.query(
         QUERY.CREATE_PRODUCT,
         Object.values(product)
       );
